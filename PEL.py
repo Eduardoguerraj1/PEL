@@ -77,8 +77,6 @@ if not dados_eq.empty:
         validade_data = datetime.strptime(ultimo['Validade'], "%d/%m/%Y")
         if validade_data < datetime.today():
             st.error("⚠️ Vencido")
-        else:
-    st.success(f"✅ Válido até {validade.strftime('%d/%m/%Y')}")
     except:
         st.warning("Data inválida")
 
