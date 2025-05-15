@@ -2,18 +2,36 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime, timedelta
 from fpdf import FPDF
-import gspread
+
+import json
+import streamlit as st
 from google.oauth2.service_account import Credentials
-import os
+import gspread
+
+# Pega o JSON em string do secrets e converte para dict
+json_credenciais = st.secrets["GOOGLE_CREDENTIALS_JSON"]
+info = json.loads(json_credenciais)
+
+# Gera as credenciais
+credenciais = Credentials.from_service_account_info(info)
+
+# Autentica o cliente gspread
+cliente = gspread.Client(auth=credenciais)
+cliente.session = cliente.auth.authorize()
+
+SHEET_ID = "1iw5uB1nj3cHij7FrVqPWBRyP1Tjl-5aQSbwaYLAaHa8"
+ABA_NOME = "verificacoes"
+
+aba = cliente.open_by_key(SHEET_ID).worksheet(ABA_NOME)
+
+# Exemplo de leitura
+dados = aba.get_all_records()
+st.write(dados)
+
 
 # Configuração da página
 st.set_page_config(page_title="Verificação", layout="centered")
 
-# Autenticação com Google Sheets via st.secrets
-info = dict(st.secrets["google_credentials"])
-info["private_key"] = info["private_key"].replace("\\n", "\n")
-credenciais = Credentials.from_service_account_info(info)
-cliente = gspread.authorize(credenciais)
 
 # Google Sheets
 SHEET_ID = "1iw5uB1nj3cHij7FrVqPWBRyP1Tjl-5aQSbwaYLAaHa8"
