@@ -71,7 +71,7 @@ else:
 dados_eq = df[df["Equipamento"] == equipamento]
 if not dados_eq.empty:
     ultimo = dados_eq.sort_values("Data", ascending=False).iloc[0]
-    st.markdown(f"<small>Último valor: <b>{ultimo['Valor']} mg/L</b></small>", unsafe_allow_html=True)
+    st.markdown(f"<small>Último valor: <b>{ultimo['Valor']} uSv/h</b></small>", unsafe_allow_html=True)
     st.markdown(f"<small>Validade: <b>{ultimo['Validade']}</b></small>", unsafe_allow_html=True)
     try:
         validade_data = datetime.strptime(ultimo['Validade'], "%d/%m/%Y")
@@ -84,7 +84,7 @@ st.markdown("<hr style='margin:5px 0;'>", unsafe_allow_html=True)
 st.markdown("<b><small>Inserir nova verificação</small></b>", unsafe_allow_html=True)
 
 # Inputs compactos
-valor = st.number_input("Valor (mg/L)", min_value=0.0, step=0.001, format="%.3f", key="valor")
+valor = st.number_input("Valor (uSv/h)", min_value=0.0, step=0.001, format="%.3f", key="valor")
 data = st.date_input("Data", value=datetime.today(), key="data")
 validade = st.date_input("Validade", value=datetime.today() + timedelta(days=180), key="validade")
 obs = st.text_area("Obs", key="obs")
@@ -115,7 +115,7 @@ if st.button("Gerar PDF", key="pdf"):
     pdf.cell(200, 8, txt="Relatório Semanal", ln=True, align="C")
     pdf.ln(5)
     for _, row in semana.iterrows():
-        texto = f"{row['Equipamento']}, {row['Valor']} mg/L, {row['Data'].strftime('%d/%m/%Y')}, Val.: {row['Validade']}\nObs: {row['Observacoes']}\n"
+        texto = f"{row['Equipamento']}, {row['Valor']} uSv/h, {row['Data'].strftime('%d/%m/%Y')}, Val.: {row['Validade']}\nObs: {row['Observacoes']}\n"
         pdf.multi_cell(0, 8, texto)
     pdf_file = "relatorio_semanal.pdf"
     pdf.output(pdf_file)
