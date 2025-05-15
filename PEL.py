@@ -12,19 +12,22 @@ import gspread
 json_credenciais = st.secrets["GOOGLE_CREDENTIALS_JSON"]
 info = json.loads(json_credenciais)
 
-# Gera as credenciais
-credenciais = Credentials.from_service_account_info(info)
+# Gera as credenciais com escopos apropriados
+credenciais = Credentials.from_service_account_info(
+    info,
+    scopes=["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
+)
 
-# Autentica o cliente gspread
-cliente = gspread.Client(auth=credenciais)
-cliente.session = cliente.auth.authorize()
+# Autentica com gspread
+cliente = gspread.authorize(credenciais)
 
+# Abre a aba da planilha
 SHEET_ID = "1iw5uB1nj3cHij7FrVqPWBRyP1Tjl-5aQSbwaYLAaHa8"
 ABA_NOME = "verificacoes"
 
 aba = cliente.open_by_key(SHEET_ID).worksheet(ABA_NOME)
 
-# Exemplo de leitura
+# Exibe os dados no Streamlit
 dados = aba.get_all_records()
 st.write(dados)
 
