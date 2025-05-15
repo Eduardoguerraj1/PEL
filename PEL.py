@@ -8,6 +8,9 @@ import streamlit as st
 from google.oauth2.service_account import Credentials
 import gspread
 
+# Configuração da página
+st.set_page_config(page_title="Verificação", layout="centered")
+
 # Pega o JSON em string do secrets e converte para dict
 json_credenciais = st.secrets["GOOGLE_CREDENTIALS_JSON"]
 info = json.loads(json_credenciais)
@@ -32,8 +35,7 @@ dados = aba.get_all_records()
 st.write(dados)
 
 
-# Configuração da página
-st.set_page_config(page_title="Verificação", layout="centered")
+
 
 
 # Google Sheets
