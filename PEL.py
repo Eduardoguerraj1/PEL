@@ -117,3 +117,17 @@ os.system("git config --global user.email 'eduardoquimica@poli.ufrj.br'")
 
 
 # streamlit run PEL.py
+
+
+
+import os
+
+os.system("git config --global user.name 'Eduardoguerraj1'")
+os.system("git config --global user.email 'eduardoquimica@poli.ufrj.br'")
+
+
+#git config --global user.name "Eduardoguerraj1"
+#git config --global user.email "eduardoquimica@poli.ufrj.br"
+
+
+# streamlit run PEL.py
