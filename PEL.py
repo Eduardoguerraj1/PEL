@@ -10,6 +10,16 @@ import streamlit as st
 import json
 from google.oauth2.service_account import Credentials
 
+import json
+from google.oauth2.service_account import Credentials
+import streamlit as st
+
+info = dict(st.secrets["google_credentials"])
+info["private_key"] = info["private_key"].replace("\\n", "\n")
+
+credenciais = Credentials.from_service_account_info(info)
+
+
 info = st.secrets["google_credentials"]
 credenciais = Credentials.from_service_account_info(info)
 
