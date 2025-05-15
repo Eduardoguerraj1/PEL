@@ -6,6 +6,13 @@ import gspread
 from google.oauth2.service_account import Credentials
 import os
 
+import streamlit as st
+import json
+from google.oauth2.service_account import Credentials
+
+info = st.secrets["google_credentials"]
+credenciais = Credentials.from_service_account_info(info)
+
 # Configuração da página
 st.set_page_config(page_title="Verificação", layout="centered")
 
