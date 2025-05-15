@@ -7,12 +7,17 @@ from google.oauth2.service_account import Credentials
 import os
 
 import streamlit as st
-import json
 from google.oauth2.service_account import Credentials
+import gspread
 
-import json
-from google.oauth2.service_account import Credentials
-import streamlit as st
+# Lê e corrige o formato da chave
+info = dict(st.secrets["google_credentials"])
+info["private_key"] = info["private_key"].replace("\\n", "\n")
+
+# Autenticação com Google Sheets
+credenciais = Credentials.from_service_account_info(info)
+cliente = gspread.authorize(credenciais)
+
 
 info = dict(st.secrets["google_credentials"])
 info["private_key"] = info["private_key"].replace("\\n", "\n")
