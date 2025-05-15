@@ -6,38 +6,18 @@ import gspread
 from google.oauth2.service_account import Credentials
 import os
 
-import streamlit as st
-from google.oauth2.service_account import Credentials
-import gspread
-
-# Lê e corrige o formato da chave
-info = dict(st.secrets["google_credentials"])
-info["private_key"] = info["private_key"].replace("\\n", "\n")
-
-# Autenticação com Google Sheets
-credenciais = Credentials.from_service_account_info(info)
-cliente = gspread.authorize(credenciais)
-
-
-info = dict(st.secrets["google_credentials"])
-info["private_key"] = info["private_key"].replace("\\n", "\n")
-
-credenciais = Credentials.from_service_account_info(info)
-
-
-info = st.secrets["google_credentials"]
-credenciais = Credentials.from_service_account_info(info)
-
 # Configuração da página
 st.set_page_config(page_title="Verificação", layout="centered")
+
+# Autenticação com Google Sheets via st.secrets
+info = dict(st.secrets["google_credentials"])
+info["private_key"] = info["private_key"].replace("\\n", "\n")
+credenciais = Credentials.from_service_account_info(info)
+cliente = gspread.authorize(credenciais)
 
 # Google Sheets
 SHEET_ID = "1iw5uB1nj3cHij7FrVqPWBRyP1Tjl-5aQSbwaYLAaHa8"
 ABA_NOME = "verificacoes"
-CRED_FILE = "credenciais.json"
-escopos = ["https://www.googleapis.com/auth/spreadsheets.readonly", "https://www.googleapis.com/auth/spreadsheets"]
-credenciais = Credentials.from_service_account_file(CRED_FILE, scopes=escopos)
-cliente = gspread.authorize(credenciais)
 aba = cliente.open_by_key(SHEET_ID).worksheet(ABA_NOME)
 dados = aba.get_all_records()
 df = pd.DataFrame(dados)
@@ -59,7 +39,6 @@ with col1:
 with col2:
     if st.button("➡️", key="avancar"):
         st.session_state.idx = (st.session_state.idx + 1) % len(equipamentos_unicos)
-
 
 equipamento = st.selectbox("Equipamento", equipamentos_unicos + ["Novo"], index=st.session_state.idx)
 
@@ -106,7 +85,7 @@ if st.button("Equipamento ausente", key="ausente"):
 st.markdown("<hr style='margin:5px 0;'>", unsafe_allow_html=True)
 st.markdown("<small><b>📄 PDF da semana</b></small>", unsafe_allow_html=True)
 
-# PDF
+# Geração do PDF
 df["Data"] = pd.to_datetime(df["Data"], format="%d/%m/%Y")
 semana = df[df["Data"] >= datetime.today() - timedelta(days=7)]
 
@@ -123,6 +102,8 @@ if st.button("Gerar PDF", key="pdf"):
     pdf.output(pdf_file)
     with open(pdf_file, "rb") as f:
         st.download_button("📥 Baixar", f, file_name=pdf_file)
+
+
 
 
 import os
